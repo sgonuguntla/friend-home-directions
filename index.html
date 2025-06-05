@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Friend Locator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Find My Friend</h2>
+    <input type="text" id="nameInput" placeholder="Type a name..." autocomplete="off">
+    <ul id="suggestions"></ul>
+    <br>
+    <button onclick="showDirections()">Show Directions</button>
+  </div>
+
+  <script>
+    const friends = [
+      { name: "Subba Kolla", address: "25727 South Village Drive, Chantilly, VA 20152" },
+      { name: "Ramana PathiPati", address: "4567 Sunrise Valley Dr, Reston, VA 20191" },
+      { name: "Sreenivasa Gonuguntla", address: "23476 Chervil Ln, Ashburn, VA 20148" },
+      { name: "Sam Rao", address: "1 Infinite Loop, Cupertino, CA 95014" },
+      { name: "Sita Reddy", address: "1600 Amphitheatre Parkway, Mountain View, CA" }
+    ];
+
+    const input = document.getElementById('nameInput');
+    const suggestions = document.getElementById('suggestions');
+
+    let selectedFriend = null;
+
+    input.addEventListener('input', function () {
+      const query = input.value.toLowerCase();
+      suggestions.innerHTML = '';
+
+      const matches = friends.filter(f => f.name.toLowerCase().startsWith(query));
+
+      matches.forEach(match => {
+        const li = document.createElement('li');
+        li.textContent = match.name;
+        li.onclick = () => {
+          input.value = match.name;
+          selectedFriend = match;
+          suggestions.innerHTML = '';
+        };
+        suggestions.appendChild(li);
+      });
+    });
+
+    function showDirections() {
+      const name = input.value;
+      const friend = friends.find(f => f.name === name);
+      if (friend) {
+        const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(friend.address)}`;
+        window.open(mapsUrl, '_blank');
+      } else {
+        alert("Please select a valid name from the list.");
+      }
+    }
+  </script>
+</body>
+</html>
